@@ -20,8 +20,8 @@ class LegoData{
      initialize()
      {  
       return new Promise((resolve,reject)=>{
-        const setDat = require("../data/setData"); 
-        const themeData = require("../data/themeData"); 
+        const setDat = require("../Data/setData"); 
+        const themeData = require("../Data/themeData"); 
 
         let i=0;
         for(i=0;i<setDat.length;i++)
