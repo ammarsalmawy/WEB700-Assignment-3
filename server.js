@@ -20,7 +20,7 @@ const path = require('path');
 const app = express(); 
 const HTTP_PORT = process.env.PORT || 8080;
 
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/Views');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
   });
 
   app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, '/views/about.html'));
+    res.sendFile(path.join(__dirname, '/Views/about.html'));
   });
 
   app.get('/lego/sets', async (req, res) => {
@@ -61,7 +61,7 @@ app.get('/', (req, res) => {
     
       } catch (error) {
       
-        res.sendFile(path.join(__dirname, '/views/404.html'));
+        res.sendFile(path.join(__dirname, '/Views/404.html'));
 
       }
     
@@ -82,7 +82,7 @@ app.get('/', (req, res) => {
     
       } catch (error) {
       
-        res.sendFile(path.join(__dirname, '/views/404.html'));
+        res.sendFile(path.join(__dirname, '/Views/404.html'));
 
       }
     
@@ -102,5 +102,5 @@ app.get('/', (req, res) => {
         .catch(err => res.status(422).send(err));
 });
   app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, '/views/404.html'));
+    res.status(404).sendFile(path.join(__dirname, '/Views/404.html'));
 });
