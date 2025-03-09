@@ -90,6 +90,18 @@ class LegoData{
         }
       });
      }
+     addSet(newSet)
+     {
+      return new Promise((resolve,reject)=>{
+        if (this.sets.some(set => set.set_num === newSet.set_num)) {
+          reject('Set already exists');
+        } else {
+          this.sets.push(newSet);
+          resolve();
+        }
+
+      });
+     }
 
     
 

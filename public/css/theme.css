@@ -1,0 +1,129 @@
+
+html, body {
+        height: 100%;  
+        margin: 0;   
+        background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/Ed_g2s_background.jpg') ;
+        background-size: cover; 
+        font-family: "Trirong", serif;
+        color: rgb(59, 58, 58);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+  
+
+}
+.first-container{
+    border-radius: 2%;
+    width: 70%; 
+    margin: 0 auto;
+    background-color: rgba(88, 40, 88, 0.288);
+    text-align: center;
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px;
+    -webkit-box-shadow: 6px 13px 38px 7px rgba(145,120,214,1);
+-moz-box-shadow: 6px 13px 38px 7px rgba(145,120,214,1);
+box-shadow: 6px 13px 38px 7px rgba(145,120,214,1);
+}
+.my-container{
+
+    background-color: rgba(250,240,240,0.5);
+    padding: 20px;
+    align-items: center;
+    border-radius: 1%;
+    justify-content: center; 
+    padding-left: 40px;
+}
+
+.bg-light{
+    background-color: rgba(88, 40, 88, 0.288) !important;
+    display: flex;
+    position: sticky;
+    align-items: center;
+    justify-content: space-between;
+    background-blend-mode: darken;
+    background-size: cover;
+    padding: 10px 20px;
+    webkit-box-shadow: -4px -7px 20px -3px rgba(0,0,0,0.75);
+    moz-box-shadow: -4px -7px 20px -3px rgba(0,0,0,0.75);
+    box-shadow: -4px -7px 20px -3px rgba(0,0,0,0.75);
+}
+.horizentals{
+    float: left;
+    list-style-type: none;
+  display: flex;
+}
+.nav-link {
+    margin-right: 20px;
+    color:rgb(238, 210, 159);
+    text-shadow: 0.5px 0.5px rgb(238, 210, 159);
+    font-family: "Trirong", serif;
+    padding-top: 2px;
+}
+.nav-link:hover {
+    color: #dfdfdf;
+}
+.navbar-brand{
+    font-family: "Sofia", sans-serif;
+    padding-top: 9px;
+    font-size: large;
+    text-shadow: 2px 2px #2b2b2b;
+    color:wheat;
+
+}
+.active{
+    color: #dfdfdf !important;
+}
+table{
+    text-align: center;
+    width: 100%;
+    
+}
+tr:nth-child(odd) td {
+    background: linear-gradient(to right, #c5c3c2, #b6b8bd); 
+}
+.centered-div {
+    border-radius: 2%;
+    width: 70%; 
+    margin: 0 auto;
+    background-color: rgba(88, 40, 88, 0.5);
+    text-align: center;
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px;
+    -webkit-box-shadow: 6px 13px 38px 7px rgba(145,120,214,1);
+-moz-box-shadow: 6px 13px 38px 7px rgba(145,120,214,1);
+box-shadow: 6px 13px 38px 7px rgba(145,120,214,1);
+}
+h1,h2,h3,h4,h5,h6{
+    text-align: center;
+    font-weight: bolder;
+    font-size:xxx-large;
+    text-shadow: 1px 1px #2b2b2b;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    letter-spacing: 2px;
+}
+a{
+    color: aquamarine;
+}
+a:hover{
+    color: cyan;
+}
+.ul-elements{
+    
+    font-weight: bold;
+}
+ol,ul{
+    margin: 10px 20px 10px 0px;
+    font-size: large;
+}
+ol il{
+    padding: 10px 20px 10px 0px;
+
+}
+ul il{
+    padding: 10px 20px 10px 0px;
+
+}
+.centralized{
+    text-align: center;
+}
