@@ -12,9 +12,11 @@
 class LegoData{
 
      sets;
+     themes;
      constructor()
      {
         this.sets= [];
+        this.themes = [];
      }
 
      initialize()
@@ -28,18 +30,41 @@ class LegoData{
         {
             this.sets.push(setDat[i]);
         }
+        let j = 0;
+        for(j=0;j<themeData.length;j++)
+          {
+              this.themes.push(themeData[j]);
+          }
 
-        this.sets.forEach(obj => {
-         const matchingProperties = themeData.find((theme) => theme.id === obj.theme_id);
+          let allThemesMatched = true;
+          this.sets.forEach(obj => {
+            const matchingTheme = themeData.find(theme => theme.id === obj.theme_id);
+            
+            if (matchingTheme) {
+                obj.theme = matchingTheme.name;
+            } else {
+                allThemesMatched = false;
+            }
+        });
+
+        
+        if (allThemesMatched) {
+            resolve("The sets array is filled with objects");
+        } else {
+            reject("Some sets could not be matched with themes.");
+        }
+
+      //   this.sets.forEach(obj => {
+      //    const matchingProperties = themeData.find((theme) => theme.id === obj.theme_id);
      
-         if (matchingProperties) {
-             obj.theme = matchingProperties.name; 
-             resolve('the sets array is filled with objects');
-         }
-         else{
-          reject('unable to fill the sets array!');
-         }
-       });
+      //    if (matchingProperties) {
+      //        obj.theme = matchingProperties.name; 
+      //        resolve('the sets array is filled with objects');
+      //    }
+      //    else{
+      //     reject('unable to fill the sets array!');
+      //    }
+      //  });
 
       });
 
@@ -90,10 +115,11 @@ class LegoData{
         }
       });
      }
-     addSet(newSet)
+     async addSet(newSet)
      {
+      let allSets = await this.getAllSets();
       return new Promise((resolve,reject)=>{
-        if (this.sets.some(set => set.set_num === newSet.set_num)) {
+        if (allSets.some(set => set.set_num === newSet.set_num)) {
           reject('Set already exists');
         } else {
           this.sets.push(newSet);
@@ -104,42 +130,54 @@ class LegoData{
      }
 
     
+//For themes
+getAllThemes()
+{
+ return new Promise((resolve,reject)=>{
+   if(this.themes !=null)
+   {
+     resolve(this.themes);
+   }
+   else{
+     reject('No objects!');
+   }
+ });
 
 }
+
+getThemeById(id)
+{
+ return new Promise((resolve,reject)=>{
+   
+   const result = this.themes.find(({ id }) => id === id);
+   if(result != null)
+   {
+     resolve(result);
+   }
+   else
+   {
+     reject('Error with getSetByName: Unable to find requested set');
+   }
+});
+  
+}
+
+
+async deleteSetByNum(setNum){
+  let allSets = await this.getAllSets();
+  return new Promise((resolve,reject)=>{
+    let foundSetIndex = allSets.findIndex(s => s.set_num == setNum);
+    if(foundSetIndex != -1)
+    {
+      allSets.splice(foundSetIndex,1);
+      resolve("Set deleted successfully!");
+    }
+    else{
+      reject('Error with deleteSetByNum: Unable to find the set');
+
+    }
+  });
+
+}
+}
 module.exports = LegoData;
-// let data = new LegoData();
-
-
-
-// async function executePromises() {
- 
-//   try {
-//     let resultInit = await data.initialize();
-//     console.log(resultInit);
-
-//     let resultGetAll = await data.getAllSets();
-//     console.log(resultGetAll);
-
-//     try {
-//         let resultGetByName = await data.getSetByNum("0012-1w");
-//         console.log(resultGetByName);
-//     } catch (err) {
-//         console.error(err);
-//     }
-
-//     try {
-//         let resultGetByTheme = await data.getSetsByTheme('tech');
-//         console.log(resultGetByTheme);
-//     } catch (err) {
-//         console.error(err);
-//     }
-// } catch (err) {
-//     console.log(err);
-// }
-// }
-
-// console.log(executePromises());
-
-// console.log(`Number of Sets: ${data.getAllSets().length}`);
-// console.log(data.getSetByNum("0012-1"));
-// console.log(`Number of 'tech' sets: ${data.getSetsByTheme('tech').length}`);

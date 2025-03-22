@@ -127,3 +127,28 @@ ul il{
 .centralized{
     text-align: center;
 }
+.inline{
+    display: inline-block;
+   
+}
+.center-all {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    /* align-items: center;  */
+    text-align: center; 
+
+}
+.two-buttons{
+    text-align: left;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: inline-block;
+}
+input{
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid rgba(88, 40, 88);;
+    border-radius: 5px;
+}
+
