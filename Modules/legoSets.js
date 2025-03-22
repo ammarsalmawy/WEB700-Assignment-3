@@ -54,17 +54,7 @@ class LegoData{
             reject("Some sets could not be matched with themes.");
         }
 
-      //   this.sets.forEach(obj => {
-      //    const matchingProperties = themeData.find((theme) => theme.id === obj.theme_id);
-     
-      //    if (matchingProperties) {
-      //        obj.theme = matchingProperties.name; 
-      //        resolve('the sets array is filled with objects');
-      //    }
-      //    else{
-      //     reject('unable to fill the sets array!');
-      //    }
-      //  });
+   
 
       });
 
