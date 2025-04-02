@@ -8,52 +8,61 @@
 *
 * Name: Loubna Almoussallam Student ID: 114741242 Date: 30 Jan, 2025
 ********************************************************************************/
+require('dotenv').config();
+require('pg');
+const Sequelize = require('sequelize');
 
 class LegoData{
 
-     sets;
-     themes;
+  sequelize
+  Set
+  Theme
+  
      constructor()
      {
-        this.sets= [];
-        this.themes = [];
+        this.sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, process.env.PGPASSWORD, {
+          host: process.env.PGHOST,
+          dialect: 'postgres',
+          port: 5432,
+          dialectOptions: {
+            ssl: { rejectUnauthorized: false },
+          },
+        });
+
+        this.Theme = this.sequelize.define('Theme', {
+          id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+          }, 
+          name: Sequelize.STRING
+        });
+
+        this.Set = this.sequelize.define('Set', {
+          set_num: {
+            type: Sequelize.STRING,
+            primaryKey: true,
+          }, 
+          name: Sequelize.STRING,
+          year: Sequelize.INTEGER,
+          num_parts: Sequelize.INTEGER,
+          theme_id: Sequelize.INTEGER,
+          img_url: Sequelize.STRING
+        });
+        this.Set.belongsTo(this.Theme, {foreignKey: 'theme_id'});
+
      }
 
      initialize()
      {  
       return new Promise((resolve,reject)=>{
-        const setDat = require("../Data/setData"); 
-        const themeData = require("../Data/themeData"); 
-
-        let i=0;
-        for(i=0;i<setDat.length;i++)
-        {
-            this.sets.push(setDat[i]);
-        }
-        let j = 0;
-        for(j=0;j<themeData.length;j++)
-          {
-              this.themes.push(themeData[j]);
-          }
-
-          let allThemesMatched = true;
-          this.sets.forEach(obj => {
-            const matchingTheme = themeData.find(theme => theme.id === obj.theme_id);
-            
-            if (matchingTheme) {
-                obj.theme = matchingTheme.name;
-            } else {
-                allThemesMatched = false;
-            }
+        this.sequelize.sync()
+        .then(() => {
+          resolve('Database connection successful');
+        })
+        .catch((err) => {
+          reject('Database connection failed');
         });
-
-        
-        if (allThemesMatched) {
-            resolve("The sets array is filled with objects");
-        } else {
-            reject("Some sets could not be matched with themes.");
-        }
-
    
 
       });
@@ -63,13 +72,13 @@ class LegoData{
      getAllSets()
      {
       return new Promise((resolve,reject)=>{
-        if(this.sets !=null)
-        {
-          resolve(this.sets);
-        }
-        else{
-          reject('No objects!');
-        }
+        this.Set.findAll({include: this.Theme})
+        .then((sets) => {
+          resolve(sets);
+        })
+        .catch((err) => {
+          reject('No objects found');
+        });
       });
 
      }
@@ -78,16 +87,15 @@ class LegoData{
      {
       return new Promise((resolve,reject)=>{
         
-        const result = this.sets.find(({ set_num }) => set_num === setNum);
-        if(result != null)
-        {
-          resolve(result);
-        }
-        else
-        {
-          reject('Error with getSetByName: Unable to find requested set');
-        }
-     });
+        this.Set.findAll({where: {set_num: setNum}, include: this.Theme})
+        .then((set) => {
+          resolve(set[0]);
+        })
+        .catch((err) => {
+          reject('Error with getSetByNum: Unable to find requested set');
+        });
+      }
+     );
        
      }
 
@@ -95,28 +103,35 @@ class LegoData{
      {
       return new Promise((resolve,reject)=>{
 
-        const result1 = this.sets.filter((obj) => obj.theme.toLowerCase().includes(theme.toLowerCase()));
-        if(result1 != '')
-        {
-          resolve(result1);
+        this.Set.findAll({include: [this.Theme], where: {
+          '$Theme.name$': {
+          [Sequelize.Op.iLike]: `%${theme}%`
+          }
+         }})
+        .then((sets) => {
+          resolve(sets);
         }
-        else{
-          reject('Error with getSetsByTheme: Unable to find requested sets by theme');
-        }
+        )    
+        .catch((err) => {
+          reject('Error with getSetsByTheme: Unable to find requested set');
+        });     
       });
-     }
+    }
      async addSet(newSet)
      {
-      let allSets = await this.getAllSets();
+      
       return new Promise((resolve,reject)=>{
-        if (allSets.some(set => set.set_num === newSet.set_num)) {
-          reject('Set already exists');
-        } else {
-          this.sets.push(newSet);
-          resolve();
+        
+          this.Set.create(newSet)
+          .then((set) => {
+            resolve('Set added successfully!');
+          })
+          .catch((err) => {
+            reject( err.errors[0].message);
+          });
         }
-
-      });
+      );
+     
      }
 
     
@@ -124,48 +139,30 @@ class LegoData{
 getAllThemes()
 {
  return new Promise((resolve,reject)=>{
-   if(this.themes !=null)
-   {
-     resolve(this.themes);
-   }
-   else{
-     reject('No objects!');
-   }
+    this.Theme.findAll()
+    .then((themes) => {
+      resolve(themes);
+    })
+    .catch((err) => {
+      reject('No objects found');
+    });
  });
 
 }
 
-getThemeById(id)
-{
- return new Promise((resolve,reject)=>{
-   
-   const result = this.themes.find(({ id }) => id === id);
-   if(result != null)
-   {
-     resolve(result);
-   }
-   else
-   {
-     reject('Error with getSetByName: Unable to find requested set');
-   }
-});
-  
-}
+
 
 
 async deleteSetByNum(setNum){
-  let allSets = await this.getAllSets();
+  
   return new Promise((resolve,reject)=>{
-    let foundSetIndex = allSets.findIndex(s => s.set_num == setNum);
-    if(foundSetIndex != -1)
-    {
-      allSets.splice(foundSetIndex,1);
-      resolve("Set deleted successfully!");
-    }
-    else{
-      reject('Error with deleteSetByNum: Unable to find the set');
-
-    }
+    this.Set.destroy({where: {set_num: setNum}})
+    .then((set) => {
+      resolve('Set deleted successfully!');
+    })
+    .catch((err) => {
+      reject(err.errors[0].message);
+    });
   });
 
 }
